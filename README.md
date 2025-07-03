@@ -143,16 +143,95 @@ Applied to both full and incremental data:
 * Re-runs extraction and transformation.
 * Verifies only new records are processed.
 
-### 6. Documentation
-
-* Clear markdown sections for each step.
-* Well-commented, readable code.
 
 
-## Notes
 
-* Works on any system with Python, pandas, and Jupyter.
-* Handles missing `last_extraction.txt` and missing values.
-* Uses `>=` comparison for timestamp-based extraction.
-* Repository is public per grading requirements.
+
+# DSA-2040A  - Lab 5: Load
+
+## Lab 5 – Load
+
+This section documents the implementation of **Lab 5: Load in ETL** for the DSA 2040A course at USIU-Africa. This lab extends the previous extraction and transformation work by loading the transformed datasets (`transformed_full.csv` and `transformed_incremental.csv`) into a structured format using Pandas DataFrames saved as Parquet files.
+
+### Objective
+
+The primary goal of Lab 5 is to:
+- Load both `transformed_full.csv` and `transformed_incremental.csv` into a structured destination.
+- Automate the process using a Jupyter Notebook.
+- Update the GitHub repository with the new loading implementation.
+
+### Loading Method
+
+- **Approach**: Utilizes Pandas to read the transformed CSV files and save them as Parquet files, an optimized columnar storage format suitable for data analysis.
+- **Tools**: 
+  - **Python** with **pandas** for data handling.
+  - **Jupyter Notebook** (`etl_load.ipynb`) for automation and documentation.
+- **Output Format**: Parquet files stored in the `loaded_data/` directory.
+
+### Project Structure Update
+
+The repository structure has been updated to include the following for Lab 5:
+
+ETL_Extract_IranziInnocent_670513/
+├── etl_load.ipynb              # New Jupyter Notebook for the loading process
+├── loaded_data/                # Directory for loaded Parquet files
+│   ├── full_data.parquet       # Parquet file for full transformed data
+│   └── incremental_data.parquet # Parquet file for incremental transformed data
+├── .gitignore                  # Updated to exclude Parquet files and loaded_data/
+└── README.md                   # Updated documentation
+
+### Implementation Details
+
+#### 1. Setup
+- **Libraries**: Imported `pandas` and `os` to handle data manipulation and file operations.
+- **Directory Creation**: The `loaded_data/` directory was created programmatically using `os.makedirs(data_dir, exist_ok=True)` to store the Parquet output files.
+- **File Paths**: Defined as `loaded_data/full_data.parquet` and `loaded_data/incremental_data.parquet` for the full and incremental datasets, respectively.
+
+#### 2. Loading Full Transformed Data
+- **Process**: 
+  - Read `transformed_full.csv` into a Pandas DataFrame using `pd.read_csv()`.
+  - Saved the DataFrame as `full_data.parquet` using `df_full.to_parquet()` with `index=False` to exclude the index column.
+- **Outcome**: Successfully loaded all 105 records from `transformed_full.csv`, which includes columns `transaction_id`, `date`, `customer_id`, `product`, `amount`, `product_category`, and `month`.
+
+#### 3. Loading Incremental Transformed Data
+- **Process**: 
+  - Read `transformed_incremental.csv` into a Pandas DataFrame using `pd.read_csv()`.
+  - Saved the DataFrame as `incremental_data.parquet` using `df_inc.to_parquet()` with `index=False`.
+- **Outcome**: The `transformed_incremental.csv` file is currently empty due to the `last_extraction.txt` date (2025-04-05) matching the latest data in `custom_data.csv`. As a result, `incremental_data.parquet` is also empty. New records with dates after 2025-04-05 would populate this file upon re-running `etl_extract.ipynb` and `etl_load.ipynb`.
+
+#### 4. Verification
+- **Process**: 
+  - Read the saved Parquet files back into DataFrames using `pd.read_parquet()`.
+  - Displayed the first 5 rows of each file using `.head()` to confirm data integrity.
+- **Outcome**: Verification confirmed that `full_data.parquet` matches `transformed_full.csv`, while `incremental_data.parquet` is empty, consistent with the current incremental extraction state.
+
+### Sample Code
+
+
+# Section 1: Load Setup
+import pandas as pd
+import os
+
+data_dir = "loaded_data"
+os.makedirs(data_dir, exist_ok=True)
+parquet_full_path = os.path.join(data_dir, "full_data.parquet")
+parquet_inc_path = os.path.join(data_dir, "incremental_data.parquet")
+
+# Section 2: Load Full Transformed Data
+df_full = pd.read_csv("transformed_full.csv")
+df_full.to_parquet(parquet_full_path, index=False)
+print(f"Full transformed data saved to {parquet_full_path}")
+
+# Section 3: Load Incremental Transformed Data
+df_inc = pd.read_csv("transformed_incremental.csv")
+df_inc.to_parquet(parquet_inc_path, index=False)
+print(f"Incremental transformed data saved to {parquet_inc_path}")
+
+# Section 4: Verification
+verified_full = pd.read_parquet(parquet_full_path)
+verified_inc = pd.read_parquet(parquet_inc_path)
+print("Verified full data (first 5 rows):")
+print(verified_full.head())
+print("Verified incremental data (first 5 rows):")
+print(verified_inc.head())
 
