@@ -23,7 +23,7 @@ The implementation is in a Jupyter Notebook (`etl_extract.ipynb`) and includes f
 - **Test Incremental Extraction**: Append records and verify accurate incremental processing.
 - **Documentation**: Step-by-step explanations using Markdown cells.
 
-All project files are organized in the folder `ETL_Extract_IranziInnocent_670513` and hosted on a public GitHub repository.
+All project files are organized in the folder `ETL_Extract_Iranzi_513` and hosted on a public GitHub repository.
 
 ## Tools Used
 
@@ -65,9 +65,6 @@ pip install jupyter pandas
 
 Ensure Git is installed from [git-scm.com](https://git-scm.com/).
 Clone the repository:
-
-
-> Replace `yourusername` with your actual GitHub username.
 
 ### 4. Navigate to the Project Directory
 
